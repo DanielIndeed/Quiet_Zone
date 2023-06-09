@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "982684375217",
+    "project_id": "quiet-zone-7d39a",
+    "storage_bucket": "quiet-zone-7d39a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982684375217:android:d179f3f83bf9487c49ea90",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "982684375217-3f424n627je3f1ikl8ijiujpfasm0a5e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjXRB02mnq9doeIJ-yR0zf6gLViQLAalc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "982684375217-3f424n627je3f1ikl8ijiujpfasm0a5e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

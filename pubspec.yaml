@@ -38,6 +38,19 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^4.0.3
   lottie: ^2.3.2
+  http: ^0.13.3
+  flutter_local_notifications: ^13.0.0
+  path_provider: ^2.0.14
+  awesome_notifications: ^0.7.4+1
+  permission_handler: ^10.2.0
+  noise_meter:
+    git:
+      url: https://github.com/DanielIndeed/flutter-plugins/
+      path: 'packages/noise_meter/'
+  sqflite: ^2.2.7
+  path: ^1.8.2
+  flutter_launcher_icons: ^0.13.1
+  shared_preferences: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -50,7 +63,11 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
-# For information on the generic Dart part of this file, see the
+flutter_launcher_icons:
+  image_path: "C:/Users/boscu/Code Projects/Keep On Hearing/e-nnovate/Android Phone/flutter_application_1/assets/Images/logo/IconKitchen-Output/android/res/mipmap-xxxhdpi/ic_launcher.png"
+  android: true
+  adaptive_icon_background: "C:/Users/boscu/Code Projects/Keep On Hearing/e-nnovate/Android Phone/flutter_application_1/assets/Images/logo/IconKitchen-Output/android/res/mipmap-xxxhdpi/ic_launcher_background.png"
+  adaptive_icon_foreground: "C:/Users/boscu/Code Projects/Keep On Hearing/e-nnovate/Android Phone/flutter_application_1/assets/Images/logo/IconKitchen-Output/android/res/mipmap-xxxhdpi/ic_launcher_foreground.png"
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
