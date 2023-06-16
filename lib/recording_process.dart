@@ -68,14 +68,14 @@ class _RecordingProcessState extends State<RecordingProcess> {
     getAge();
     openDb();
     AwesomeNotifications().initialize(
-      '@drawable/res_required_icon',
+      'resource://drawable/ic_stat_name',
       [
         NotificationChannel(
           channelKey: 'basic',
           channelName: 'Basic Notifications',
           playSound: true,
           onlyAlertOnce: true,
-          defaultColor: Colors.teal,
+          defaultColor: Colors.red,
           importance: NotificationImportance.High,
           channelShowBadge: true,
           channelDescription: 'something',
@@ -188,6 +188,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
       notification_for_required();
     } else if (decoded_response == 'Recommended') {
       print('Recommended 2');
+      notification_for_recommended();
     } else {
       print('Not sleeping');
     }
@@ -332,10 +333,8 @@ class _RecordingProcessState extends State<RecordingProcess> {
         title: 'Earplugs are required',
         body:
             'If not available, withdrawal from the environment is also an option',
-        bigPicture:
-            'C:/Users/boscu/Code Projects/Keep On Hearing/e-nnovate/Android Phone/flutter_application_1/assets/Images/attach/1.png',
-        largeIcon:
-            'C:/Users/boscu/Code Projects/Keep On Hearing/e-nnovate/Android Phone/flutter_application_1/assets/Images/attach/1.png',
+        bigPicture: 'asset://assets/2.png',
+        largeIcon: 'asset://assets/2.png',
         notificationLayout: NotificationLayout.BigPicture,
       ),
     );
@@ -349,10 +348,8 @@ class _RecordingProcessState extends State<RecordingProcess> {
         title: 'Earplugs are recommended',
         body:
             'If not available, withdrawal from the environment is also an option',
-        bigPicture:
-            'C:/Users/boscu/Code Projects/Keep On Hearing/e-nnovate/Android Phone/flutter_application_1/assets/Images/attach/2.png',
-        largeIcon:
-            'C:/Users/boscu/Code Projects/Keep On Hearing/e-nnovate/Android Phone/flutter_application_1/assets/Images/attach/2.png',
+        bigPicture: 'asset://assets/1.png',
+        largeIcon: 'asset://assets/1.png',
         notificationLayout: NotificationLayout.BigPicture,
       ),
     );
