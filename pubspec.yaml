@@ -39,7 +39,6 @@ dependencies:
   google_fonts: ^4.0.3
   lottie: ^2.3.2
   http: ^0.13.3
-  flutter_local_notifications: ^13.0.0
   path_provider: ^2.0.14
   awesome_notifications: ^0.7.4+1
   permission_handler: ^10.2.0

@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, unused_local_variable
+// ignore_for_file: non_constant_identifier_names, unused_local_variable, prefer_final_fields, avoid_print, unused_field
 
 import 'dart:async';
 import 'dart:convert';
@@ -6,8 +6,6 @@ import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/utilities.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
@@ -19,9 +17,6 @@ import 'dart:io';
 import 'package:noise_meter/noise_meter.dart';
 
 void main() => runApp(const MaterialApp(home: RecordingProcess()));
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
 
 class RecordingProcess extends StatefulWidget {
   const RecordingProcess({Key? key}) : super(key: key);
@@ -61,6 +56,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
   String rows = '';
   String response = '';
   int? val_age;
+  int _counter = 0;
 
   @override
   void initState() {
@@ -71,7 +67,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
       'resource://drawable/ic_stat_name',
       [
         NotificationChannel(
-          channelKey: 'basic',
+          channelKey: 'high_importance_channel',
           channelName: 'Basic Notifications',
           playSound: true,
           onlyAlertOnce: true,
@@ -182,13 +178,14 @@ class _RecordingProcessState extends State<RecordingProcess> {
 
   notification_sender() async {
     var decoded_response = jsonDecode(response);
-    print(decoded_response);
     if (decoded_response['response'] == 'Required') {
       print('Required 2');
       notification_for_required();
+      setTimer_Req();
     } else if (decoded_response == 'Recommended') {
       print('Recommended 2');
       notification_for_recommended();
+      setTimer_Recom();
     } else {
       print('Not sleeping');
     }
@@ -196,7 +193,6 @@ class _RecordingProcessState extends State<RecordingProcess> {
 
   Future<Database> openDb() async {
     final databasesPath = await getDatabasesPath();
-    print(databasesPath);
     final path = join(databasesPath, 'my_database.db');
 
     return openDatabase(path, onCreate: (db, version) {
@@ -257,7 +253,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
       batch.insert('decibel_dataset', {'number': val_dB_2.toDouble()});
       val_dB_to_print = await getMean();
       await batch.commit();
-      if (p % 5 == 0) {
+      if (p % 5 == 0 && _counter == 0) {
         var avgValdB = await getMean();
         var rows = await getRows();
         sendValue(avgValdB, rows, val_age);
@@ -297,9 +293,6 @@ class _RecordingProcessState extends State<RecordingProcess> {
   }
 
   Future<void> sendValue(avgValdB, rows, val_age) async {
-    print(avgValdB);
-    print(rows);
-    print(val_age);
     final url =
         "https://quietzone.pythonanywhere.com/response?avg_val_dB=$avgValdB&k=$rows&val_age=$val_age";
     response = await getData(url);
@@ -328,14 +321,13 @@ class _RecordingProcessState extends State<RecordingProcess> {
   Future<void> notification_for_required() async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        channelKey: 'basic',
+        channelKey: 'high_importance_channel',
         id: createUniqueId(),
         title: 'Earplugs are required',
         body:
             'If not available, withdrawal from the environment is also an option',
-        bigPicture: 'asset://assets/2.png',
-        largeIcon: 'asset://assets/2.png',
         notificationLayout: NotificationLayout.BigPicture,
+        bigPicture: 'asset://assets/2.png',
       ),
     );
   }
@@ -344,7 +336,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: createUniqueId(),
-        channelKey: 'basic',
+        channelKey: 'high_importance_channel',
         title: 'Earplugs are recommended',
         body:
             'If not available, withdrawal from the environment is also an option',
@@ -353,5 +345,40 @@ class _RecordingProcessState extends State<RecordingProcess> {
         notificationLayout: NotificationLayout.BigPicture,
       ),
     );
+  }
+
+  int createUniqueId() {
+    return DateTime.now().millisecondsSinceEpoch.remainder(100000);
+  }
+
+  Timer? _timer_req;
+  Timer? _timer_recom;
+
+  void setTimer_Req() {
+    _counter = 10;
+    _timer_req = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_counter > 0) {
+          _counter--;
+          print(_counter);
+        } else {
+          _timer_req?.cancel();
+        }
+      });
+    });
+  }
+
+  void setTimer_Recom() {
+    _counter = 21600;
+    _timer_recom = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_counter > 0) {
+          _counter--;
+          print(_counter);
+        } else {
+          _timer_req?.cancel();
+        }
+      });
+    });
   }
 }

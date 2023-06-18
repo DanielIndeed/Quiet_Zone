@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, duplicate_ignore
+// ignore_for_file: non_constant_identifier_names, duplicate_ignore, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/home.dart';
 import 'dart:ui' as ui;
@@ -6,17 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'age_input.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() => runApp(const MaterialApp(home: MyApp()));
-
-void notif_permission() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  if (await Permission.notification.isPermanentlyDenied) {
-    openAppSettings();
-  } else if (await Permission.notification.isDenied) {
-    await Permission.notification.request();
-  }
-}
 
 void mic_permission() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +21,6 @@ void mic_permission() async {
 
 // ignore: prefer_typing_uninitialized_variables
 var prediction;
-var data;
 String url = '';
 int? val_age;
 
@@ -92,12 +83,10 @@ class _MyAppState extends State<MyApp> {
                     height: 120,
                     child: IconButton(
                       onPressed: () async {
-                        permission_requests();
+                        notif_request();
                         setAge(int.parse(ageController.text));
-                        print(val_age);
                         await getAge();
                         if (val_age != null) {
-                          print(val_age);
                           Navigator.push(
                             this.context,
                             MaterialPageRoute(
@@ -137,9 +126,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> permission_requests() async {
-    if (await Permission.notification.isDenied) {
-      await Permission.notification.request();
-    }
     if (await Permission.microphone.isDenied) {
       await Permission.microphone.request();
     }
@@ -153,5 +139,13 @@ class _MyAppState extends State<MyApp> {
   Future<void> getAge() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     val_age = pref.getInt('val_age');
+  }
+
+  Future<void> notif_request() async {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
   }
 }

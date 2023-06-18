@@ -96,7 +96,6 @@ class _HomeState extends State<Home> {
       iconSize: 150,
       padding: EdgeInsets.zero,
       onPressed: () async {
-        print('Button pressed');
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const RecordingProcess()),
