@@ -21,6 +21,13 @@ Future<void> insertNumber(number) async {
   await batch.commit();
 }
 
+Future<void> deletedata() async {
+    final db = await openDb();
+    final batch = db.batch();
+    batch.delete('decibel_dataset');
+    await batch.commit();
+  }
+
 int random(int min, int max) {
   return min + Random().nextInt(max - min);
 }
@@ -30,5 +37,27 @@ void dummy_data() async {
   for (int i = 1; i <= 50; i++) {
     randomNumber = random(110, 120);
     await insertNumber(randomNumber);
+  }
+}
+
+Future<String> getMean() async {
+  final db = await openDb();
+  final result = await db.rawQuery('SELECT AVG(number) FROM decibel_dataset');
+  if (result.isNotEmpty) {
+    final mean = result.first.values.first as num?;
+    return mean?.toStringAsFixed(2) ?? '0.00';
+  } else {
+    return '0.00';
+  }
+}
+
+Future<String> getRows() async {
+  final db = await openDb();
+  final result = await db.rawQuery('SELECT COUNT(*) FROM decibel_dataset');
+  if (result.isNotEmpty) {
+    final rows = result.first.values.first as num?;
+    return rows?.toStringAsFixed(2) ?? '0.00';
+  } else {
+    return '0.00';
   }
 }

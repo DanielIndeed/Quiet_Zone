@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "982684375217",
-    "project_id": "quiet-zone-7d39a",
-    "storage_bucket": "quiet-zone-7d39a.appspot.com"
+    "project_number": "356102405287",
+    "project_id": "quietzone-47453",
+    "storage_bucket": "quietzone-47453.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:982684375217:android:d179f3f83bf9487c49ea90",
+        "mobilesdk_app_id": "1:356102405287:android:d821358ea5f9cf2c9e6f82",
         "android_client_info": {
-          "package_name": "com.example.flutter_application_1"
+          "package_name": "quietzone.tech.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "982684375217-3f424n627je3f1ikl8ijiujpfasm0a5e.apps.googleusercontent.com",
+          "client_id": "356102405287-4815tljd2rf6rbff1t370253acgchilu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBjXRB02mnq9doeIJ-yR0zf6gLViQLAalc"
+          "current_key": "AIzaSyCAsX8FrYx0i0uv02nwm_BNKeqR3q0DpGY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "982684375217-3f424n627je3f1ikl8ijiujpfasm0a5e.apps.googleusercontent.com",
+              "client_id": "356102405287-4815tljd2rf6rbff1t370253acgchilu.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

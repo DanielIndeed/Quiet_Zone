@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +10,13 @@ import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 import 'dart:io';
 import 'package:noise_meter/noise_meter.dart';
+import 'utils/Age_shared_preferences/data_storage.dart';
+import 'utils/Databases/decibel_database/data_functions.dart';
+import 'utils/notifs/notification_displaying.dart';
+import 'utils/style/text.dart';
+import 'utils/Navig_bar/navig_bar.dart';
 
 void main() => runApp(const MaterialApp(home: RecordingProcess()));
 
@@ -26,24 +28,6 @@ class RecordingProcess extends StatefulWidget {
 }
 
 class _RecordingProcessState extends State<RecordingProcess> {
-  TextStyle appText() {
-    return TextStyle(
-      fontSize: 50,
-      fontStyle: FontStyle.italic,
-      fontWeight: ui.FontWeight.w500, // use the ui prefix for FontWeight
-      fontFamily: GoogleFonts.ibmPlexSans().fontFamily,
-      foreground: Paint()
-        ..shader = ui.Gradient.linear(
-          const Offset(50, 40),
-          const Offset(150, 20),
-          <Color>[
-            const Color.fromRGBO(255, 106, 91, 1.0),
-            const Color.fromRGBO(255, 206, 66, 1.0),
-          ],
-        ),
-    );
-  }
-
   double k = 0;
   double val_dB = 0;
   late double avgValdB;
@@ -94,8 +78,6 @@ class _RecordingProcessState extends State<RecordingProcess> {
     stop();
   }
 
-  final file = File('sound.txt');
-
   bool _isRecording = false;
   StreamSubscription<NoiseReading>? _noiseSubscription;
   late NoiseMeter _noiseMeter;
@@ -103,56 +85,60 @@ class _RecordingProcessState extends State<RecordingProcess> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 0, 0, 0),
-      ),
-      home: Scaffold(
-        body: Column(
-          children: [
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.zero,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.only(top: 3),
-                    child: Image.asset(
-                      'assets/logo quiet zone.png',
-                      height: 160,
-                      width: 160,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.zero,
-                    alignment: Alignment.center,
-                    child: Lottie.asset('assets/animation1_1.mp4.lottie.json'),
-                  ),
-                  Container(
-                    alignment: AlignmentGeometry.lerp(
-                        Alignment.centerLeft, Alignment.centerRight, 0.47),
-                    padding: const EdgeInsets.only(top: 12),
-                    margin: EdgeInsets.zero,
-                    child: Text(
-                      _isRecording ? '${val_dB_to_print}dB' : 'Sleeping',
-                      style: appText(),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.zero,
-                    height: 120,
-                    child: iconButtonWidget(),
-                  ),
-                ],
-              ),
-            ),
-          ],
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          scaffoldBackgroundColor: const Color.fromARGB(255, 0, 0, 0),
         ),
-      ),
-    );
+        home: Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.zero,
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(top: 55),
+                      child: Image.asset(
+                        'assets/logo quiet zone.png',
+                        height: 160,
+                        width: 160,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.zero,
+                      alignment: Alignment.center,
+                      child:
+                          Lottie.asset('assets/animation1_1.mp4.lottie.json'),
+                    ),
+                    Container(
+                      alignment: AlignmentGeometry.lerp(
+                          Alignment.centerLeft, Alignment.centerRight, 0.47),
+                      padding: const EdgeInsets.only(top: 12),
+                      margin: EdgeInsets.zero,
+                      child: Text(
+                        _isRecording ? '${val_dB_to_print}dB' : 'Sleeping',
+                        style: appText(),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.zero,
+                      height: 120,
+                      child: iconButtonWidget(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          bottomNavigationBar: Container(
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 16),
+            child: BottomNav(),
+          ),
+        ));
   }
 
   IconButton iconButtonWidget() {
@@ -176,67 +162,6 @@ class _RecordingProcessState extends State<RecordingProcess> {
     return response.body;
   }
 
-  notification_sender() async {
-    var decoded_response = jsonDecode(response);
-    if (decoded_response['response'] == 'Required') {
-      print('Required 2');
-      notification_for_required();
-      setTimer_Req();
-    } else if (decoded_response == 'Recommended') {
-      print('Recommended 2');
-      notification_for_recommended();
-      setTimer_Recom();
-    } else {
-      print('Not sleeping');
-    }
-  }
-
-  Future<Database> openDb() async {
-    final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, 'my_database.db');
-
-    return openDatabase(path, onCreate: (db, version) {
-      return db.execute(
-          'CREATE TABLE decibel_dataset (id INTEGER PRIMARY KEY, number INTEGER)');
-    }, version: 1);
-  }
-
-  Future<void> insertNumber(number) async {
-    final db = await openDb();
-    final batch = db.batch();
-    batch.insert('decibel_dataset', {'number': number});
-    await batch.commit();
-  }
-
-  Future<void> deletedata() async {
-    final db = await openDb();
-    final batch = db.batch();
-    batch.delete('decibel_dataset');
-    await batch.commit();
-  }
-
-  Future<String> getMean() async {
-    final db = await openDb();
-    final result = await db.rawQuery('SELECT AVG(number) FROM decibel_dataset');
-    if (result.isNotEmpty) {
-      final mean = result.first.values.first as num?;
-      return mean?.toStringAsFixed(2) ?? '0.00';
-    } else {
-      return '0.00';
-    }
-  }
-
-  Future<String> getRows() async {
-    final db = await openDb();
-    final result = await db.rawQuery('SELECT COUNT(*) FROM decibel_dataset');
-    if (result.isNotEmpty) {
-      final rows = result.first.values.first as num?;
-      return rows?.toStringAsFixed(2) ?? '0.00';
-    } else {
-      return '0.00';
-    }
-  }
-
   void onData(NoiseReading noiseReading) async {
     setState(() {
       if (!_isRecording) {
@@ -256,6 +181,9 @@ class _RecordingProcessState extends State<RecordingProcess> {
       if (p % 5 == 0 && _counter == 0) {
         var avgValdB = await getMean();
         var rows = await getRows();
+        print(avgValdB);
+        print(rows);
+        print(val_age);
         sendValue(avgValdB, rows, val_age);
         p = 0;
       }
@@ -301,56 +229,6 @@ class _RecordingProcessState extends State<RecordingProcess> {
     }
   }
 
-  Future<void> getAge() async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    val_age = pref.getInt('val_age');
-  }
-
-  int random(int min, int max) {
-    return min + Random().nextInt(max - min);
-  }
-
-  void dummy_data() async {
-    var randomNumber = 0;
-    for (int i = 1; i <= 50; i++) {
-      randomNumber = random(110, 120);
-      await insertNumber(randomNumber);
-    }
-  }
-
-  Future<void> notification_for_required() async {
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        channelKey: 'high_importance_channel',
-        id: createUniqueId(),
-        title: 'Earplugs are required',
-        body:
-            'If not available, withdrawal from the environment is also an option',
-        notificationLayout: NotificationLayout.BigPicture,
-        bigPicture: 'asset://assets/2.png',
-      ),
-    );
-  }
-
-  Future<void> notification_for_recommended() async {
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: createUniqueId(),
-        channelKey: 'high_importance_channel',
-        title: 'Earplugs are recommended',
-        body:
-            'If not available, withdrawal from the environment is also an option',
-        bigPicture: 'asset://assets/1.png',
-        largeIcon: 'asset://assets/1.png',
-        notificationLayout: NotificationLayout.BigPicture,
-      ),
-    );
-  }
-
-  int createUniqueId() {
-    return DateTime.now().millisecondsSinceEpoch.remainder(100000);
-  }
-
   Timer? _timer_req;
   Timer? _timer_recom;
 
@@ -380,5 +258,25 @@ class _RecordingProcessState extends State<RecordingProcess> {
         }
       });
     });
+  }
+
+  notification_sender() async {
+    var decoded_response = jsonDecode(response);
+    if (decoded_response['response'] == 'Required') {
+      print('Required 2');
+      notification_for_required();
+      setTimer_Req();
+    } else if (decoded_response == 'Recommended') {
+      print('Recommended 2');
+      notification_for_recommended();
+      setTimer_Recom();
+    } else {
+      print('Not sleeping ${decoded_response}');
+    }
+  }
+
+  Future<void> getAge() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    val_age = pref.getInt('val_age');
   }
 }
