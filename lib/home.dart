@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
                       Container(
                         alignment: AlignmentGeometry.lerp(
                             Alignment.centerLeft, Alignment.centerRight, 0.47),
-                        padding: const EdgeInsets.only(top: 12),
+                        padding: const EdgeInsets.only(),
                         margin: EdgeInsets.zero,
                         child: Text(
                           'Sleeping',
@@ -80,7 +80,7 @@ class _HomeState extends State<Home> {
     return IconButton(
       icon: Image.asset('assets/start_button.png'),
       iconSize: 150,
-      padding: EdgeInsets.zero,
+      padding: EdgeInsets.only(bottom: 20),
       onPressed: () async {
         mic_permission();
         Navigator.push(

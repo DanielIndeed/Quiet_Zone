@@ -2,21 +2,18 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui' as ui;
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
-import 'dart:io';
 import 'package:noise_meter/noise_meter.dart';
-import 'utils/Age_shared_preferences/data_storage.dart';
-import 'utils/Databases/decibel_database/data_functions.dart';
-import 'utils/notifs/notification_displaying.dart';
 import 'utils/style/text.dart';
 import 'utils/Navig_bar/navig_bar.dart';
+import 'dart:math';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 void main() => runApp(const MaterialApp(home: RecordingProcess()));
 
@@ -125,7 +122,6 @@ class _RecordingProcessState extends State<RecordingProcess> {
                     ),
                     Container(
                       alignment: Alignment.center,
-                      margin: EdgeInsets.zero,
                       height: 120,
                       child: iconButtonWidget(),
                     ),
@@ -145,7 +141,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
     return IconButton(
       icon: Image.asset('assets/stop_button.png'),
       iconSize: 150,
-      padding: EdgeInsets.zero,
+      padding: EdgeInsets.only(bottom: 40),
       onPressed: () {
         stop();
         Navigator.push(
@@ -221,11 +217,18 @@ class _RecordingProcessState extends State<RecordingProcess> {
   }
 
   Future<void> sendValue(avgValdB, rows, val_age) async {
+    print(avgValdB);
+    print(rows);
+    print(val_age);
+    print('sendValue');
     final url =
         "https://quietzone.pythonanywhere.com/response?avg_val_dB=$avgValdB&k=$rows&val_age=$val_age";
     response = await getData(url);
+    print(response);
     if (response != 'Negative') {
       notification_sender();
+    } else {
+      print('negative');
     }
   }
 
@@ -262,6 +265,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
 
   notification_sender() async {
     var decoded_response = jsonDecode(response);
+    print(decoded_response['response']);
     if (decoded_response['response'] == 'Required') {
       print('Required 2');
       notification_for_required();
@@ -278,5 +282,96 @@ class _RecordingProcessState extends State<RecordingProcess> {
   Future<void> getAge() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     val_age = pref.getInt('val_age');
+  }
+}
+
+Future<void> notification_for_required() async {
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      channelKey: 'high_importance_channel',
+      id: createUniqueId(),
+      title: 'Earplugs are required',
+      body:
+          'If not available, withdrawal from the environment is also an option',
+      notificationLayout: NotificationLayout.BigPicture,
+      bigPicture: 'asset://assets/2.png',
+    ),
+  );
+}
+
+Future<void> notification_for_recommended() async {
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: createUniqueId(),
+      channelKey: 'high_importance_channel',
+      title: 'Earplugs are recommended',
+      body:
+          'If not available, withdrawal from the environment is also an option',
+      bigPicture: 'asset://assets/1.png',
+      largeIcon: 'asset://assets/1.png',
+      notificationLayout: NotificationLayout.BigPicture,
+    ),
+  );
+}
+
+int createUniqueId() {
+  return DateTime.now().millisecondsSinceEpoch.remainder(100000);
+}
+
+Future<Database> openDb() async {
+  final databasesPath = await getDatabasesPath();
+  final path = join(databasesPath, 'my_database.db');
+
+  return openDatabase(path, onCreate: (db, version) {
+    return db.execute(
+        'CREATE TABLE decibel_dataset (id INTEGER PRIMARY KEY, number INTEGER)');
+  }, version: 1);
+}
+
+Future<void> insertNumber(number) async {
+  final db = await openDb();
+  final batch = db.batch();
+  batch.insert('decibel_dataset', {'number': number});
+  await batch.commit();
+}
+
+Future<void> deletedata() async {
+  final db = await openDb();
+  final batch = db.batch();
+  batch.delete('decibel_dataset');
+  await batch.commit();
+}
+
+int random(int min, int max) {
+  return min + Random().nextInt(max - min);
+}
+
+void dummy_data() async {
+  var randomNumber = 0;
+  for (int i = 1; i <= 50; i++) {
+    randomNumber = random(110, 120);
+    await insertNumber(randomNumber);
+  }
+}
+
+Future<String> getMean() async {
+  final db = await openDb();
+  final result = await db.rawQuery('SELECT AVG(number) FROM decibel_dataset');
+  if (result.isNotEmpty) {
+    final mean = result.first.values.first as num?;
+    return mean?.toStringAsFixed(2) ?? '0.00';
+  } else {
+    return '0.00';
+  }
+}
+
+Future<String> getRows() async {
+  final db = await openDb();
+  final result = await db.rawQuery('SELECT COUNT(*) FROM decibel_dataset');
+  if (result.isNotEmpty) {
+    final rows = result.first.values.first as num?;
+    return rows?.toStringAsFixed(2) ?? '0.00';
+  } else {
+    return '0.00';
   }
 }
