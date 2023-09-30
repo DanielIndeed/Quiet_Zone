@@ -30,7 +30,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
   late double avgValdB;
   double p = 0;
   double val_dB_2 = 0;
-  String val_dB_to_print = '';
+  num val_dB_to_print = 0;
   String url = '';
   double avgValDb_to_send = 0;
   var data = '';
@@ -62,6 +62,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
     );
     _noiseMeter = NoiseMeter(onError);
     start();
+    stopwatch.start();
     dummy_data();
     dummy_data();
     dummy_data();
@@ -78,6 +79,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
   bool _isRecording = false;
   StreamSubscription<NoiseReading>? _noiseSubscription;
   late NoiseMeter _noiseMeter;
+  final stopwatch = Stopwatch();
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +168,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
     });
     k++;
     val_dB = (val_dB + noiseReading.meanDecibel);
-    if (k % 10 == 0) {
+    if (k % 12 == 0) {
       val_dB_2 = (val_dB / k);
       p++;
       final db = await openDb();
@@ -174,13 +176,10 @@ class _RecordingProcessState extends State<RecordingProcess> {
       batch.insert('decibel_dataset', {'number': val_dB_2.toDouble()});
       val_dB_to_print = await getMean();
       await batch.commit();
-      if (p % 5 == 0 && _counter == 0) {
-        var avgValdB = await getMean();
-        var rows = await getRows();
-        print(avgValdB);
-        print(rows);
-        print(val_age);
-        sendValue(avgValdB, rows, val_age);
+      if (p % 15 == 0 && _counter == 0) {
+        num avgValdB = (await getMean());
+        num time = stopwatch.elapsedMilliseconds ~/ 1000;
+        sendValue(avgValdB, time, val_age);
         p = 0;
       }
       k = 0;
@@ -216,13 +215,12 @@ class _RecordingProcessState extends State<RecordingProcess> {
     }
   }
 
-  Future<void> sendValue(avgValdB, rows, val_age) async {
+  Future<void> sendValue(avgValdB, time, val_age) async {
     print(avgValdB);
-    print(rows);
+    print(time);
     print(val_age);
-    print('sendValue');
     final url =
-        "https://quietzone.pythonanywhere.com/response?avg_val_dB=$avgValdB&k=$rows&val_age=$val_age";
+        "https://quietzone.pythonanywhere.com/response?avg_val_dB=$avgValdB&k=$time&val_age=$val_age";
     response = await getData(url);
     print(response);
     if (response != 'Negative') {
@@ -349,19 +347,20 @@ int random(int min, int max) {
 void dummy_data() async {
   var randomNumber = 0;
   for (int i = 1; i <= 50; i++) {
-    randomNumber = random(110, 120);
+    randomNumber = random(120, 130);
     await insertNumber(randomNumber);
   }
 }
 
-Future<String> getMean() async {
+Future<num> getMean() async {
   final db = await openDb();
   final result = await db.rawQuery('SELECT AVG(number) FROM decibel_dataset');
   if (result.isNotEmpty) {
-    final mean = result.first.values.first as num?;
-    return mean?.toStringAsFixed(2) ?? '0.00';
+    final mean =
+        num.parse((result.first.values.first as num).toStringAsFixed(2));
+    return mean.toDouble();
   } else {
-    return '0.00';
+    return 0.00;
   }
 }
 
