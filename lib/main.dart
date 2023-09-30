@@ -4,9 +4,7 @@ import 'package:flutter_application_1/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'utils/Age_shared_preferences/age_input.dart';
 import 'utils/Permissions/permissions.dart';
-import 'utils/style/text.dart';
 import 'dart:ui' as ui;
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() => runApp(const MaterialApp(home: MyApp()));
@@ -93,7 +91,7 @@ class _MyAppState extends State<MyApp> {
                             notif_request();
                             mic_permission();
                           },
-                          icon: Image.asset('assets/start_button.png'),
+                          icon: Image.asset('assets/login.png'),
                           iconSize: 150,
                         ),
                       )),
