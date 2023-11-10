@@ -234,7 +234,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
   Timer? _timer_recom;
 
   void setTimer_Req() {
-    _counter = 10;
+    _counter = 14400;
     _timer_req = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_counter > 0) {
@@ -248,7 +248,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
   }
 
   void setTimer_Recom() {
-    _counter = 21600;
+    _counter = 28800;
     _timer_recom = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_counter > 0) {
