@@ -19,3 +19,21 @@ TextStyle appText() {
       ),
   );
 }
+
+TextStyle notifText() {
+  return TextStyle(
+    fontSize: 28,
+    fontStyle: FontStyle.italic,
+    fontWeight: ui.FontWeight.w500, // use the ui prefix for FontWeight
+    fontFamily: GoogleFonts.ibmPlexSans().fontFamily,
+    foreground: Paint()
+      ..shader = ui.Gradient.linear(
+        const Offset(10, 30),
+        const Offset(150, 20),
+        <Color>[
+          const Color.fromRGBO(255, 106, 91, 1.0),
+          const Color.fromRGBO(255, 206, 66, 1.0),
+        ],
+      ),
+  );
+}

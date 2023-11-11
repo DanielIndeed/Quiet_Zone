@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/Navig_bar/navig_bar.dart';
 import 'package:flutter_application_1/utils/style/text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(const MaterialApp(home: Sonic_Hues()));
 
@@ -42,4 +43,6 @@ class _Sonic_Hues_State extends State<Sonic_Hues> {
           ),
         ));
   }
+
+  
 }

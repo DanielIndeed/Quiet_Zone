@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/settings.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,12 +38,15 @@ class _RecordingProcessState extends State<RecordingProcess> {
   String rows = '';
   String response = '';
   int? val_age;
-  int _counter = 0;
+  double _counter_req = 0;
+  double _counter_rec = 0;
+  num time = 0;
 
   @override
   void initState() {
     super.initState();
     getAge();
+    getNotifTime();
     openDb();
     AwesomeNotifications().initialize(
       'resource://drawable/ic_stat_name',
@@ -176,7 +180,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
       batch.insert('decibel_dataset', {'number': val_dB_2.toDouble()});
       val_dB_to_print = await getMean();
       await batch.commit();
-      if (p % 15 == 0 && _counter == 0) {
+      if (p % 15 == 0 && (_counter_rec == 0 && _counter_req == 0)) {
         num avgValdB = (await getMean());
         num time = stopwatch.elapsedMilliseconds ~/ 1000;
         sendValue(avgValdB, time, val_age);
@@ -234,12 +238,14 @@ class _RecordingProcessState extends State<RecordingProcess> {
   Timer? _timer_recom;
 
   void setTimer_Req() {
-    _counter = 10;
+    avgValdB = 0;
+    time = 0;
+    _counter_req = (notif_time! * 3600 / 2);
     _timer_req = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        if (_counter > 0) {
-          _counter--;
-          print(_counter);
+        if (_counter_req > 0) {
+          _counter_req--;
+          print(_counter_req);
         } else {
           _timer_req?.cancel();
         }
@@ -248,12 +254,14 @@ class _RecordingProcessState extends State<RecordingProcess> {
   }
 
   void setTimer_Recom() {
-    _counter = 21600;
+    avgValdB = 0;
+    time = 0;
+    _counter_rec = notif_time! * 3600 as double;
     _timer_recom = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        if (_counter > 0) {
-          _counter--;
-          print(_counter);
+        if (_counter_rec > 0) {
+          _counter_rec--;
+          print(_counter_rec);
         } else {
           _timer_req?.cancel();
         }
@@ -268,7 +276,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
       print('Required 2');
       notification_for_required();
       setTimer_Req();
-    } else if (decoded_response == 'Recommended') {
+    } else if (decoded_response == 'Recommen') {
       print('Recommended 2');
       notification_for_recommended();
       setTimer_Recom();
@@ -280,6 +288,11 @@ class _RecordingProcessState extends State<RecordingProcess> {
   Future<void> getAge() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     val_age = pref.getInt('val_age');
+  }
+
+  Future<void> getNotifTime() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    notif_time = pref.getInt('notif_time');
   }
 }
 
