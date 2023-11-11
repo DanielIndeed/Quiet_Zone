@@ -31,7 +31,7 @@ class _ProfileState extends State<Profile> {
               Container(
                 margin: EdgeInsets.zero,
                 alignment: Alignment.center,
-                child: Text("Feedback-Test", style: appText()),
+                child: Text("Feedback", style: appText()),
               ),
             ]),
             bottomNavigationBar: Container(
