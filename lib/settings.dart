@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/main.dart';
@@ -39,7 +41,7 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(right: 5),
+                margin: const EdgeInsets.only(right: 5),
                 alignment: Alignment.center,
                 child: Text("Settings", style: appText()),
               ),
@@ -86,7 +88,7 @@ class _SettingsState extends State<Settings> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
                         shadowColor: Colors.transparent,
-                        shape: CircleBorder()),
+                        shape: const CircleBorder()),
                     child: Ink(
                       decoration: const BoxDecoration(
                           gradient: LinearGradient(colors: [
@@ -101,7 +103,7 @@ class _SettingsState extends State<Settings> {
                               minHeight:
                                   36.0), // min sizes for Material buttons
                           alignment: Alignment.center,
-                          child: Icon(Icons.notifications)),
+                          child: const Icon(Icons.notifications)),
                     ),
                     onPressed: () {
                       showPickerNumber(context);
@@ -131,7 +133,7 @@ class _SettingsState extends State<Settings> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
                         shadowColor: Colors.transparent,
-                        shape: CircleBorder()),
+                        shape: const CircleBorder()),
                     child: Ink(
                       decoration: const BoxDecoration(
                           gradient: LinearGradient(colors: [
@@ -146,7 +148,7 @@ class _SettingsState extends State<Settings> {
                               minHeight:
                                   36.0), // min sizes for Material buttons
                           alignment: Alignment.center,
-                          child: Icon(Icons.link)),
+                          child: const Icon(Icons.link)),
                     ),
                     onPressed: () {
                       showPickerNumber(context);
@@ -181,20 +183,21 @@ class _SettingsState extends State<Settings> {
   showPickerNumber(BuildContext context) {
     Picker(
         adapter: NumberPickerAdapter(data: [
-          NumberPickerColumn(begin: 0, end: 96),
+          const NumberPickerColumn(begin: 0, end: 96),
         ]),
         delimiter: [
           PickerDelimiter(
               child: Container(
             width: 30.0,
             alignment: Alignment.center,
-            child: Icon(Icons.more_vert),
+            child: const Icon(Icons.more_vert),
           ))
         ],
         hideHeader: true,
-        title:
-            Text("Select the time in hours to have between your notifications"),
+        title: const Text(
+            "Select the time in hours to have between your notifications"),
         onConfirm: (Picker picker, List value) {
+          setTime(value[0]);
           print(value.toString());
           print(picker.getSelectedValues());
         }).showDialog(context);

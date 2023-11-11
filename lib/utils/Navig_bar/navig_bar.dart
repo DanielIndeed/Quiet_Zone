@@ -56,7 +56,7 @@ class BottomNav extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.feedback_rounded,
+            Icons.feedback,
             color: Color.fromARGB(255, 238, 109, 65),
           ),
           label: '',
