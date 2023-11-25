@@ -1,15 +1,17 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/Navig_bar/navig_bar.dart';
 import 'package:flutter_application_1/utils/style/text.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class Feedback_page extends StatefulWidget {
+  const Feedback_page({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<Feedback_page> createState() => _Feedback_pageState();
 }
 
-class _ProfileState extends State<Profile> {
+class _Feedback_pageState extends State<Feedback_page> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

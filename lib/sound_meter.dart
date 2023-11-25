@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/Navig_bar/navig_bar.dart';
 import 'package:flutter_application_1/utils/style/text.dart';
