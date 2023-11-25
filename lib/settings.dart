@@ -19,7 +19,22 @@ class Settings extends StatefulWidget {
   State<Settings> createState() => _SettingsState();
 }
 
-int? notif_time;
+int? notif_time = 8;
+
+setTime(int notif_time) async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  pref.setInt('notif_time', notif_time);
+}
+
+getTime() async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  notif_time = pref.getInt('notif_time')!;
+}
+
+void InitState() {
+  notif_time = getTime() as int?;
+  print(notif_time);
+}
 
 class _SettingsState extends State<Settings> {
   @override
@@ -45,27 +60,6 @@ class _SettingsState extends State<Settings> {
                 alignment: Alignment.center,
                 child: Text("Settings", style: appText()),
               ),
-              Container(
-                  alignment: Alignment.center,
-                  child: const Icon(
-                    Icons.person,
-                    size: 100,
-                    color: Color.fromRGBO(255, 106, 91, 1.0),
-                  )),
-              IconButton(
-                icon: Image.asset(
-                  'assets/logout.png',
-                  fit: BoxFit.cover,
-                ),
-                iconSize: 180,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MyApp()),
-                  );
-                },
-                constraints: const BoxConstraints(maxWidth: 300, maxHeight: 65),
-              ),
               const Divider(
                 height: 40,
                 color: Color.fromRGBO(255, 106, 91, 1.0),
@@ -90,21 +84,27 @@ class _SettingsState extends State<Settings> {
                         shadowColor: Colors.transparent,
                         shape: const CircleBorder()),
                     child: Ink(
-                      decoration: const BoxDecoration(
-                          gradient: LinearGradient(colors: [
-                            Color.fromRGBO(255, 106, 91, 1.0),
-                            Color.fromRGBO(255, 206, 66, 1.0),
-                          ]),
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(80.0))),
-                      child: Container(
-                          constraints: const BoxConstraints(
-                              minWidth: 70.0,
-                              minHeight:
-                                  36.0), // min sizes for Material buttons
-                          alignment: Alignment.center,
-                          child: const Icon(Icons.notifications)),
-                    ),
+                        decoration: const BoxDecoration(
+                            gradient: LinearGradient(colors: [
+                              Color.fromRGBO(255, 106, 91, 1.0),
+                              Color.fromRGBO(255, 206, 66, 1.0),
+                            ]),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(80.0))),
+                        child: Container(
+                            constraints: const BoxConstraints(
+                                minWidth: 70.0,
+                                minHeight:
+                                    36.0), // min sizes for Material buttons
+                            alignment: Alignment.center,
+                            child: Text(
+                              "${notif_time}H",
+                              style: GoogleFonts.roboto(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.w800,
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255)),
+                            ))),
                     onPressed: () {
                       showPickerNumber(context);
                     },
@@ -148,7 +148,10 @@ class _SettingsState extends State<Settings> {
                               minHeight:
                                   36.0), // min sizes for Material buttons
                           alignment: Alignment.center,
-                          child: const Icon(Icons.link)),
+                          child: const Icon(
+                            Icons.link,
+                            size: 35,
+                          )),
                     ),
                     onPressed: () {
                       showPickerNumber(context);
@@ -163,21 +166,34 @@ class _SettingsState extends State<Settings> {
                 indent: 30,
                 endIndent: 30,
               ),
+              Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.zero,
+                  child: const Icon(
+                    Icons.person,
+                    size: 140,
+                    color: Color.fromRGBO(255, 106, 91, 1.0),
+                  )),
+              IconButton(
+                icon: Image.asset(
+                  'assets/logout.png',
+                  fit: BoxFit.cover,
+                ),
+                iconSize: 180,
+                padding: const EdgeInsets.only(),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MyApp()),
+                  );
+                },
+                constraints: const BoxConstraints(maxWidth: 300, maxHeight: 35),
+              ),
             ]),
             bottomNavigationBar: Container(
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 16),
               child: BottomNav(),
             )));
-  }
-
-  Future<void> setTime(int notif_time) async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setInt('notif_time', notif_time);
-  }
-
-  Future<void> getTime() async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    notif_time = pref.getInt('notif_time');
   }
 
   showPickerNumber(BuildContext context) {
@@ -198,6 +214,8 @@ class _SettingsState extends State<Settings> {
             "Select the time in hours to have between your notifications"),
         onConfirm: (Picker picker, List value) {
           setTime(value[0]);
+          getTime();
+          setState(() {});
           print(value.toString());
           print(picker.getSelectedValues());
         }).showDialog(context);

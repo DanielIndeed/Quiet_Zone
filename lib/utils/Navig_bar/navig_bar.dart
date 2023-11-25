@@ -1,12 +1,8 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/login.dart';
-import 'package:flutter_application_1/signup.dart';
-// import 'package:path/path.dart';
 import '../../sonic_hues.dart';
-import '../../home.dart';
-import '../../feedback_page.dart';
+import '../../feedback.dart' as app_feedback;
 import '../../settings.dart';
 import '../../sound_meter.dart';
 
@@ -34,6 +30,14 @@ class BottomNav extends StatelessWidget {
       items: const [
         BottomNavigationBarItem(
           icon: Icon(
+            Icons.settings,
+            color: Color.fromARGB(255, 238, 109, 65),
+          ),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          backgroundColor: Colors.black,
+          icon: Icon(
             Icons.feedback,
             color: Color.fromARGB(255, 238, 109, 65),
           ),
@@ -42,21 +46,6 @@ class BottomNav extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(
             Icons.hearing,
-            color: Color.fromARGB(255, 238, 109, 65),
-          ),
-          label: '',
-        ),
-        BottomNavigationBarItem(
-          backgroundColor: Colors.black,
-          icon: Icon(
-            Icons.headphones,
-            color: Color.fromARGB(255, 238, 109, 65),
-          ),
-          label: '',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.settings,
             color: Color.fromARGB(255, 238, 109, 65),
           ),
           label: '',
@@ -90,19 +79,19 @@ class BottomNav extends StatelessWidget {
   void onTabTapped(BuildContext context, int index) {
     if (index == 0) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => Feedback_page()),
-      );
-    } else if (index == 1) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => Sound_meter()),
+        MaterialPageRoute(builder: (context) => const Settings()),
       );
     } else if (index == 2) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => Sonic_Hues()),
+        MaterialPageRoute(builder: (context) => const Sound_meter()),
+      );
+    } else if (index == 1) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const Sonic_Hues()),
       );
     } else if (index == 3) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => Settings()),
+        MaterialPageRoute(builder: (context) => const app_feedback.Feedback()),
       );
     } else if (index == 4) {
       Navigator.of(context).pushReplacement(
@@ -111,10 +100,6 @@ class BottomNav extends StatelessWidget {
     } else if (index == 5) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => SignUp()),
-      );
-    } else if (index == 6) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => Home()),
       );
     }
   }
