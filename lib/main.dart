@@ -8,6 +8,7 @@ import 'utils/Age_shared_preferences/age_input.dart';
 import 'utils/Permissions/permissions.dart';
 import 'dart:ui' as ui;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_application_1/utils/style/text.dart';
 
 void main() => runApp(const MaterialApp(home: MyApp()));
 
