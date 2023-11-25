@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/settings.dart';
+import 'package:flutter_application_1/sound_meter.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -111,24 +112,29 @@ class _RecordingProcessState extends State<RecordingProcess> {
                       ),
                     ),
                     Container(
+                      margin: EdgeInsets.only(top: 5),
+                      alignment: Alignment.center,
+                      child: Text("Sound Meter", style: appText()),
+                    ),
+                    Container(
                       margin: EdgeInsets.zero,
                       alignment: Alignment.center,
-                      child:
-                          Lottie.asset('assets/animation1_1.mp4.lottie.json'),
+                      child: Lottie.asset('assets/animation1_1.mp4.lottie.json',
+                          height: 250, width: 400),
                     ),
                     Container(
                       alignment: AlignmentGeometry.lerp(
                           Alignment.centerLeft, Alignment.centerRight, 0.47),
-                      padding: const EdgeInsets.only(top: 12),
+                      padding: const EdgeInsets.only(),
                       margin: EdgeInsets.zero,
                       child: Text(
                         _isRecording ? '${val_dB_to_print}dB' : 'Sleeping',
-                        style: appText(),
+                        style: appText_smaller(),
                       ),
                     ),
                     Container(
                       alignment: Alignment.center,
-                      height: 120,
+                      height: 88,
                       child: iconButtonWidget(),
                     ),
                   ],
@@ -147,12 +153,12 @@ class _RecordingProcessState extends State<RecordingProcess> {
     return IconButton(
       icon: Image.asset('assets/stop_button.png'),
       iconSize: 150,
-      padding: EdgeInsets.only(bottom: 40),
+      padding: EdgeInsets.only(bottom: 5),
       onPressed: () {
         stop();
         Navigator.push(
           this.context,
-          MaterialPageRoute(builder: (context) => const Home()),
+          MaterialPageRoute(builder: (context) => const Sound_meter()),
         );
       },
     );
