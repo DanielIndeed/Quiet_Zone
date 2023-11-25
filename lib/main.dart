@@ -1,13 +1,12 @@
 // ignore_for_file: non_constant_identifier_names, duplicate_ignore, use_build_context_synchronously, prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/home.dart';
-import 'package:flutter_application_1/sound_meter.dart';
-import 'package:flutter_application_1/utils/style/text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'sound_meter.dart';
 import 'utils/Age_shared_preferences/age_input.dart';
 import 'utils/Permissions/permissions.dart';
-// import 'dart:ui' as ui;
-// import 'package:google_fonts/google_fonts.dart';
+import 'dart:ui' as ui;
+import 'package:google_fonts/google_fonts.dart';
 
 void main() => runApp(const MaterialApp(home: MyApp()));
 
@@ -115,9 +114,22 @@ class _MyAppState extends State<MyApp> {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     val_age = pref.getInt('val_age');
   }
+}
 
-  Future<void> setTime(int notif_time) async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setInt('notif_time', 8);
-  }
+TextStyle appText() {
+  return TextStyle(
+    fontSize: 50,
+    fontStyle: FontStyle.italic,
+    fontWeight: ui.FontWeight.w500, // use the ui prefix for FontWeight
+    fontFamily: GoogleFonts.ibmPlexSans().fontFamily,
+    foreground: Paint()
+      ..shader = ui.Gradient.linear(
+        const Offset(50, 40),
+        const Offset(150, 20),
+        <Color>[
+          const Color.fromRGBO(255, 106, 91, 1.0),
+          const Color.fromRGBO(255, 206, 66, 1.0),
+        ],
+      ),
+  );
 }
