@@ -50,7 +50,14 @@ class BottomNav extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.feedback,
+            Icons.person,
+            color: Color.fromARGB(255, 238, 109, 65),
+          ),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.settings,
             color: Color.fromARGB(255, 238, 109, 65),
           ),
           label: '',
@@ -76,9 +83,13 @@ class BottomNav extends StatelessWidget {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const Sonic_Hues()),
       );
-    } else if (index == 3) {
+    } else if (index == 4) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const app_feedback.Feedback()),
+        MaterialPageRoute(builder: (context) => Profile()),
+      );
+    } else if (index == 4) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => Settings()),
       );
     }
   }

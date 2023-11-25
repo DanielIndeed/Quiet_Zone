@@ -7,7 +7,6 @@ import 'utils/Navig_bar/navig_bar.dart';
 // Notification plugin
 void main() => runApp(const MaterialApp(home: Home()));
 
-// ignore: prefer_typing_uninitialized_variables
 var prediction;
 
 class Home extends StatefulWidget {
