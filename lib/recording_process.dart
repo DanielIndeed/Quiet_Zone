@@ -4,6 +4,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/settings.dart';
+import 'package:flutter_application_1/sound_meter.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,19 +32,22 @@ class _RecordingProcessState extends State<RecordingProcess> {
   late double avgValdB;
   double p = 0;
   double val_dB_2 = 0;
-  String val_dB_to_print = '';
+  num val_dB_to_print = 0;
   String url = '';
   double avgValDb_to_send = 0;
   var data = '';
   String rows = '';
   String response = '';
   int? val_age;
-  int _counter = 0;
+  double _counter_req = 0;
+  double _counter_rec = 0;
+  num time = 0;
 
   @override
   void initState() {
     super.initState();
     getAge();
+    getNotifTime();
     openDb();
     AwesomeNotifications().initialize(
       'resource://drawable/ic_stat_name',
@@ -62,6 +67,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
     );
     _noiseMeter = NoiseMeter(onError);
     start();
+    stopwatch.start();
     dummy_data();
     dummy_data();
     dummy_data();
@@ -78,6 +84,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
   bool _isRecording = false;
   StreamSubscription<NoiseReading>? _noiseSubscription;
   late NoiseMeter _noiseMeter;
+  final stopwatch = Stopwatch();
 
   @override
   Widget build(BuildContext context) {
@@ -105,24 +112,29 @@ class _RecordingProcessState extends State<RecordingProcess> {
                       ),
                     ),
                     Container(
+                      margin: EdgeInsets.only(top: 5),
+                      alignment: Alignment.center,
+                      child: Text("Sound Meter", style: appText()),
+                    ),
+                    Container(
                       margin: EdgeInsets.zero,
                       alignment: Alignment.center,
-                      child:
-                          Lottie.asset('assets/animation1_1.mp4.lottie.json'),
+                      child: Lottie.asset('assets/animation1_1.mp4.lottie.json',
+                          height: 250, width: 400),
                     ),
                     Container(
                       alignment: AlignmentGeometry.lerp(
                           Alignment.centerLeft, Alignment.centerRight, 0.47),
-                      padding: const EdgeInsets.only(top: 12),
+                      padding: const EdgeInsets.only(),
                       margin: EdgeInsets.zero,
                       child: Text(
                         _isRecording ? '${val_dB_to_print}dB' : 'Sleeping',
-                        style: appText(),
+                        style: appText_smaller(),
                       ),
                     ),
                     Container(
                       alignment: Alignment.center,
-                      height: 120,
+                      height: 88,
                       child: iconButtonWidget(),
                     ),
                   ],
@@ -141,12 +153,12 @@ class _RecordingProcessState extends State<RecordingProcess> {
     return IconButton(
       icon: Image.asset('assets/stop_button.png'),
       iconSize: 150,
-      padding: EdgeInsets.only(bottom: 40),
+      padding: EdgeInsets.only(bottom: 5),
       onPressed: () {
         stop();
         Navigator.push(
           this.context,
-          MaterialPageRoute(builder: (context) => const Home()),
+          MaterialPageRoute(builder: (context) => const Sound_meter()),
         );
       },
     );
@@ -166,7 +178,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
     });
     k++;
     val_dB = (val_dB + noiseReading.meanDecibel);
-    if (k % 10 == 0) {
+    if (k % 12 == 0) {
       val_dB_2 = (val_dB / k);
       p++;
       final db = await openDb();
@@ -174,13 +186,10 @@ class _RecordingProcessState extends State<RecordingProcess> {
       batch.insert('decibel_dataset', {'number': val_dB_2.toDouble()});
       val_dB_to_print = await getMean();
       await batch.commit();
-      if (p % 5 == 0 && _counter == 0) {
-        var avgValdB = await getMean();
-        var rows = await getRows();
-        print(avgValdB);
-        print(rows);
-        print(val_age);
-        sendValue(avgValdB, rows, val_age);
+      if (p % 15 == 0 && (_counter_rec == 0 && _counter_req == 0)) {
+        num avgValdB = (await getMean());
+        num time = stopwatch.elapsedMilliseconds ~/ 1000;
+        sendValue(avgValdB, time, val_age);
         p = 0;
       }
       k = 0;
@@ -216,13 +225,12 @@ class _RecordingProcessState extends State<RecordingProcess> {
     }
   }
 
-  Future<void> sendValue(avgValdB, rows, val_age) async {
+  Future<void> sendValue(avgValdB, time, val_age) async {
     print(avgValdB);
-    print(rows);
+    print(time);
     print(val_age);
-    print('sendValue');
     final url =
-        "https://quietzone.pythonanywhere.com/response?avg_val_dB=$avgValdB&k=$rows&val_age=$val_age";
+        "https://quietzone.pythonanywhere.com/response?avg_val_dB=$avgValdB&k=$time&val_age=$val_age";
     response = await getData(url);
     print(response);
     if (response != 'Negative') {
@@ -236,12 +244,14 @@ class _RecordingProcessState extends State<RecordingProcess> {
   Timer? _timer_recom;
 
   void setTimer_Req() {
-    _counter = 10;
+    avgValdB = 0;
+    time = 0;
+    _counter_req = (notif_time! * 3600 / 2);
     _timer_req = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        if (_counter > 0) {
-          _counter--;
-          print(_counter);
+        if (_counter_req > 0) {
+          _counter_req--;
+          print(_counter_req);
         } else {
           _timer_req?.cancel();
         }
@@ -250,12 +260,14 @@ class _RecordingProcessState extends State<RecordingProcess> {
   }
 
   void setTimer_Recom() {
-    _counter = 21600;
+    avgValdB = 0;
+    time = 0;
+    _counter_rec = notif_time! * 3600 as double;
     _timer_recom = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        if (_counter > 0) {
-          _counter--;
-          print(_counter);
+        if (_counter_rec > 0) {
+          _counter_rec--;
+          print(_counter_rec);
         } else {
           _timer_req?.cancel();
         }
@@ -270,7 +282,7 @@ class _RecordingProcessState extends State<RecordingProcess> {
       print('Required 2');
       notification_for_required();
       setTimer_Req();
-    } else if (decoded_response == 'Recommended') {
+    } else if (decoded_response == 'Recommen') {
       print('Recommended 2');
       notification_for_recommended();
       setTimer_Recom();
@@ -282,6 +294,11 @@ class _RecordingProcessState extends State<RecordingProcess> {
   Future<void> getAge() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     val_age = pref.getInt('val_age');
+  }
+
+  Future<void> getNotifTime() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    notif_time = pref.getInt('notif_time');
   }
 }
 
@@ -349,19 +366,20 @@ int random(int min, int max) {
 void dummy_data() async {
   var randomNumber = 0;
   for (int i = 1; i <= 50; i++) {
-    randomNumber = random(110, 120);
+    randomNumber = random(120, 130);
     await insertNumber(randomNumber);
   }
 }
 
-Future<String> getMean() async {
+Future<num> getMean() async {
   final db = await openDb();
   final result = await db.rawQuery('SELECT AVG(number) FROM decibel_dataset');
   if (result.isNotEmpty) {
-    final mean = result.first.values.first as num?;
-    return mean?.toStringAsFixed(2) ?? '0.00';
+    final mean =
+        num.parse((result.first.values.first as num).toStringAsFixed(2));
+    return mean.toDouble();
   } else {
-    return '0.00';
+    return 0.00;
   }
 }
 
