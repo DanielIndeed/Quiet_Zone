@@ -102,5 +102,5 @@ class BottomNav extends StatelessWidget {
         MaterialPageRoute(builder: (context) => SignUp()),
       );
     }
+    }
   }
-}
