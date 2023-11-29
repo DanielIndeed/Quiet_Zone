@@ -1,14 +1,11 @@
 // ignore_for_file: non_constant_identifier_names, duplicate_ignore, use_build_context_synchronously
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/home.dart';
 import 'package:flutter_application_1/sound_meter.dart';
 import 'package:flutter_application_1/utils/style/text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'utils/Age_shared_preferences/age_input.dart';
 import 'utils/Permissions/permissions.dart';
 import 'dart:ui' as ui;
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_application_1/utils/style/text.dart';
 
 void main() => runApp(const MaterialApp(home: MyApp()));
 
