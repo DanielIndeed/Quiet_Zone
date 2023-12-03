@@ -40,7 +40,7 @@ class BottomNav extends StatelessWidget {
         BottomNavigationBarItem(
           backgroundColor: Colors.black,
           icon: Icon(
-            Icons.feedback,
+            Icons.headphones,
             color: Color.fromARGB(255, 238, 109, 65),
           ),
           label: '',
@@ -48,6 +48,13 @@ class BottomNav extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(
             Icons.hearing,
+            color: Color.fromARGB(255, 238, 109, 65),
+          ),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.feedback,
             color: Color.fromARGB(255, 238, 109, 65),
           ),
           label: '',
@@ -104,5 +111,5 @@ class BottomNav extends StatelessWidget {
         MaterialPageRoute(builder: (context) => SignUp()),
       );
     }
-    }
   }
+}

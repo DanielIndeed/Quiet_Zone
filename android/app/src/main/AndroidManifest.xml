@@ -8,7 +8,7 @@
    <application
         android:label="Quiet Zone"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/res_ic_launcher">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -28,7 +28,7 @@
               />
             <meta-data 
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/required_icon" 
+            android:resource="@drawable/res_required_icon" 
             />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

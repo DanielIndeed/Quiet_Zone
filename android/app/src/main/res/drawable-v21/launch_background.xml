@@ -5,6 +5,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/ic_launcher_background" />
+            android:src="@drawable/res_ic_launcher_background" />
     </item>
 </layer-list>
