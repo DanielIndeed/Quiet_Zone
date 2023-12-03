@@ -22,6 +22,7 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
+int lastPage = 2;
 class BottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -86,30 +87,44 @@ class BottomNav extends StatelessWidget {
   }
 
   void onTabTapped(BuildContext context, int index) {
+    late Widget route;
     if (index == 0) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const Settings()),
-      );
-    } else if (index == 2) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const Sound_meter()),
-      );
+      route = Settings();
     } else if (index == 1) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const Sonic_Hues()),
-      );
+      route = Sonic_Hues();
+    } else if (index == 2) {
+      route = Sound_meter();
     } else if (index == 3) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const app_feedback.Feedback()),
-      );
+      route = app_feedback.Feedback();
     } else if (index == 4) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => Login()),
-      );
+      route = Login();
     } else if (index == 5) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => SignUp()),
-      );
+      route = SignUp();
     }
-    }
+    
+    lastPage = index;
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => route,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          Offset begin;
+          if (lastPage < index) {
+            begin = Offset(-10.0, 0.0);
+          }else if (lastPage > index) {
+            begin = Offset(10.0, 0.0);
+          }else {
+            begin = Offset(0.0, 10.0);
+          }
+          print('From $lastPage to $index');
+          var end = Offset.zero;
+          var curve = Curves.easeInOutQuint;
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        }
+      ),
+    );
   }
+}
