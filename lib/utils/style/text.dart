@@ -55,3 +55,21 @@ TextStyle notifText() {
       ),
   );
 }
+
+TextStyle appText_smaller2() {
+  return TextStyle(
+    fontSize: 20,
+    fontStyle: FontStyle.italic,
+    fontWeight: ui.FontWeight.w500, // use the ui prefix for FontWeight
+    fontFamily: GoogleFonts.ibmPlexSans().fontFamily,
+    foreground: Paint()
+      ..shader = ui.Gradient.linear(
+        const Offset(50, 40),
+        const Offset(150, 20),
+        <Color>[
+          const Color.fromRGBO(255, 106, 91, 1.0),
+          const Color.fromRGBO(255, 206, 66, 1.0),
+        ],
+      ),
+  );
+}
