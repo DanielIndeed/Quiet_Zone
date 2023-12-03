@@ -1,6 +1,8 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import '../../login.dart';
+import '../../signup.dart';
 import 'package:flutter_application_1/login.dart';
 import 'package:flutter_application_1/signup.dart';
 import '../../sonic_hues.dart';
@@ -38,9 +40,8 @@ class BottomNav extends StatelessWidget {
           label: '',
         ),
         BottomNavigationBarItem(
-          backgroundColor: Colors.black,
           icon: Icon(
-            Icons.feedback,
+            Icons.headphones,
             color: Color.fromARGB(255, 238, 109, 65),
           ),
           label: '',
@@ -48,6 +49,14 @@ class BottomNav extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(
             Icons.hearing,
+            color: Color.fromARGB(255, 238, 109, 65),
+          ),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          backgroundColor: Colors.black,
+          icon: Icon(
+            Icons.feedback,
             color: Color.fromARGB(255, 238, 109, 65),
           ),
           label: '',
