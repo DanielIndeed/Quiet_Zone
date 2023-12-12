@@ -3,6 +3,7 @@
 // import 'dart:ffi';
 
 // import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/main.dart';
 // import 'dart:ui' as ui;
@@ -183,10 +184,12 @@ class _SettingsState extends State<Settings> {
                 iconSize: 180,
                 padding: const EdgeInsets.only(),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MyApp()),
-                  );
+                  FirebaseAuth.instance.signOut().then((value) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MyApp()),
+                    );
+                  });
                 },
                 constraints: const BoxConstraints(maxWidth: 300, maxHeight: 35),
               ),
