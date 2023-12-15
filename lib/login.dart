@@ -55,7 +55,7 @@ class _LoginState extends State<Login> {
                 Container(
                   margin: EdgeInsets.zero,
                   alignment: Alignment.center,
-                  child: Text("Login", style: appText()),
+                  child: Text("Sign in", style: appText()),
                 ),
                 Container(
                   width: width * 0.8,
@@ -116,7 +116,7 @@ class _LoginState extends State<Login> {
                           children: [
                             IconButton(
                               icon: Image.asset(
-                                'assets/login.png',
+                                'assets/signin.png',
                                 fit: BoxFit.cover,
                               ),
                               iconSize: 180,

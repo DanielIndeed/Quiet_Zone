@@ -3,12 +3,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/home.dart';
-import 'package:flutter_application_1/utils/Navig_bar/navig_bar.dart';
 import 'package:flutter_application_1/utils/style/text.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_1/sound_meter.dart';
 
 import 'age.dart';
 import 'login.dart';
@@ -76,7 +75,7 @@ class _SignUpState extends State<SignUp> {
                   Container(
                     margin: EdgeInsets.zero,
                     alignment: Alignment.center,
-                    child: Text("SignUp", style: appText()),
+                    child: Text("Sign Up", style: appText()),
                   ),
                   Container(
                       width: width * 0.8,
@@ -179,7 +178,7 @@ class _SignUpState extends State<SignUp> {
                               children: [
                                 IconButton(
                                   icon: Image.asset(
-                                    'assets/logout.png',
+                                    'assets/signup.png',
                                     fit: BoxFit.cover,
                                   ),
                                   iconSize: 180,
@@ -202,7 +201,8 @@ class _SignUpState extends State<SignUp> {
                                       Navigator.push(
                                         this.context,
                                         MaterialPageRoute(
-                                            builder: (context) => Login()),
+                                            builder: (context) =>
+                                                Sound_meter()),
                                       );
                                     });
                                   },
