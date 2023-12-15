@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/sound_meter.dart';
 import 'package:flutter_application_1/utils/style/text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'sound_meter.dart';
 import 'utils/Age_shared_preferences/age_input.dart';
 import 'utils/Permissions/permissions.dart';
 import 'dart:ui' as ui;

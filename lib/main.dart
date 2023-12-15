@@ -1,9 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, duplicate_ignore, use_build_context_synchronously, prefer_const_constructors
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/login.dart';
-import 'package:flutter_application_1/signup.dart';
 import 'package:flutter_application_1/sound_meter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'age.dart';

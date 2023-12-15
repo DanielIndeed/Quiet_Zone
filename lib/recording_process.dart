@@ -9,7 +9,6 @@ import 'package:flutter_application_1/sound_meter.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'home.dart';
 import 'package:noise_meter/noise_meter.dart';
 import 'utils/style/text.dart';
 import 'utils/Navig_bar/navig_bar.dart';

@@ -1,8 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import '../../login.dart';
-import '../../signup.dart';
 import '../../sonic_hues.dart';
 import '../../feedback.dart' as app_feedback;
 import '../../settings.dart';

@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
 import './recording_process.dart';
@@ -23,7 +23,7 @@ class _Sound_meter_State extends State<Sound_meter> {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(scaffoldBackgroundColor: Color.fromARGB(255, 0, 0, 0)),
+        theme: ThemeData(scaffoldBackgroundColor: const Color.fromARGB(255, 0, 0, 0)),
         home: Scaffold(
             body: Column(
               children: [
@@ -43,7 +43,7 @@ class _Sound_meter_State extends State<Sound_meter> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 5),
+                        margin: const EdgeInsets.only(top: 5),
                         alignment: Alignment.center,
                         child: Text("Sound Meter", style: appText()),
                       ),
@@ -85,7 +85,7 @@ class _Sound_meter_State extends State<Sound_meter> {
     return IconButton(
       icon: Image.asset('assets/start_button.png'),
       iconSize: 150,
-      padding: EdgeInsets.only(bottom: 5),
+      padding: const EdgeInsets.only(bottom: 5),
       onPressed: () async {
         mic_permission();
         Navigator.push(
