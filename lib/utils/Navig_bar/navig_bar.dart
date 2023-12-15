@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import '../../login.dart';
 import '../../signup.dart';
+import 'package:flutter_application_1/login.dart';
+import 'package:flutter_application_1/signup.dart';
 import '../../sonic_hues.dart';
 import '../../feedback.dart' as app_feedback;
 import '../../settings.dart';
