@@ -22,7 +22,6 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-int lastPage = 2;
 class BottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -102,22 +101,20 @@ class BottomNav extends StatelessWidget {
       route = SignUp();
     }
     
-    lastPage = index;
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => route,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           Offset begin;
-          if (lastPage < index) {
+          if (1.5 > index) {
             begin = Offset(-10.0, 0.0);
-          }else if (lastPage > index) {
+          }else if (1.5 < index) {
             begin = Offset(10.0, 0.0);
           }else {
             begin = Offset(0.0, 10.0);
           }
-          print('From $lastPage to $index');
           var end = Offset.zero;
-          var curve = Curves.easeInOutQuint;
+          var curve = Curves.easeInOut;
           var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           return SlideTransition(
             position: animation.drive(tween),
