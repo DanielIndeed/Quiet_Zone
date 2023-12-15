@@ -38,7 +38,6 @@ class BottomNav extends StatelessWidget {
           label: '',
         ),
         BottomNavigationBarItem(
-          backgroundColor: Colors.black,
           icon: Icon(
             Icons.headphones,
             color: Color.fromARGB(255, 238, 109, 65),
@@ -48,6 +47,14 @@ class BottomNav extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(
             Icons.hearing,
+            color: Color.fromARGB(255, 238, 109, 65),
+          ),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          backgroundColor: Colors.black,
+          icon: Icon(
+            Icons.feedback,
             color: Color.fromARGB(255, 238, 109, 65),
           ),
           label: '',
@@ -86,30 +93,37 @@ class BottomNav extends StatelessWidget {
   }
 
   void onTabTapped(BuildContext context, int index) {
+    late Widget route;
     if (index == 0) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const Settings()),
-      );
-    } else if (index == 2) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const Sound_meter()),
-      );
+      route = Settings();
     } else if (index == 1) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const Sonic_Hues()),
-      );
+      route = Sonic_Hues();
+    } else if (index == 2) {
+      route = Sound_meter();
     } else if (index == 3) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const app_feedback.Feedback()),
-      );
-    } //else if (index == 4) {
-    //Navigator.of(context).pushReplacement(
-    //  MaterialPageRoute(builder: (context) => Login()),
-    //);
-    //} else if (index == 5) {
-    //Navigator.of(context).pushReplacement(
-    //  MaterialPageRoute(builder: (context) => SignUp()),
-    //);
-    //}
+      route = app_feedback.Feedback();
+    }
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => route,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          Offset begin;
+          if (1.5 > index) {
+            begin = Offset(-10.0, 0.0);
+          }else if (1.5 < index) {
+            begin = Offset(10.0, 0.0);
+          }else {
+            begin = Offset(0.0, 10.0);
+          }
+          var end = Offset.zero;
+          var curve = Curves.easeInOut;
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        }
+      ),
+    );
   }
 }
