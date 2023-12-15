@@ -59,20 +59,20 @@ class BottomNav extends StatelessWidget {
           ),
           label: '',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.login_outlined,
-            color: Color.fromARGB(255, 116, 54, 33),
-          ),
-          label: '',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.create,
-            color: Color.fromARGB(255, 116, 54, 33),
-          ),
-          label: '',
-        ),
+        //BottomNavigationBarItem(
+        //  icon: Icon(
+        //    Icons.login_outlined,
+        //    color: Color.fromARGB(255, 116, 54, 33),
+        //  ),
+        //  label: '',
+        //),
+        //BottomNavigationBarItem(
+        //  icon: Icon(
+        //    Icons.create,
+        //    color: Color.fromARGB(255, 116, 54, 33),
+        //  ),
+        //  label: '',
+        //),
         // BottomNavigationBarItem(
         //   icon: Icon(Icons.home, color: Color.fromARGB(255, 238, 109, 65)),
         //   label: '',
@@ -102,14 +102,14 @@ class BottomNav extends StatelessWidget {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const app_feedback.Feedback()),
       );
-    } else if (index == 4) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => Login()),
-      );
-    } else if (index == 5) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => SignUp()),
-      );
-    }
+    } //else if (index == 4) {
+    //Navigator.of(context).pushReplacement(
+    //  MaterialPageRoute(builder: (context) => Login()),
+    //);
+    //} else if (index == 5) {
+    //Navigator.of(context).pushReplacement(
+    //  MaterialPageRoute(builder: (context) => SignUp()),
+    //);
+    //}
   }
 }
