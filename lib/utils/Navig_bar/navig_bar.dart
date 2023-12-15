@@ -3,8 +3,6 @@
 import 'package:flutter/material.dart';
 import '../../login.dart';
 import '../../signup.dart';
-import 'package:flutter_application_1/login.dart';
-import 'package:flutter_application_1/signup.dart';
 import '../../sonic_hues.dart';
 import '../../feedback.dart' as app_feedback;
 import '../../settings.dart';
@@ -63,18 +61,25 @@ class BottomNav extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.login_outlined,
-            color: Color.fromARGB(255, 116, 54, 33),
+            Icons.feedback,
+            color: Color.fromARGB(255, 238, 109, 65),
           ),
           label: '',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.create,
-            color: Color.fromARGB(255, 116, 54, 33),
-          ),
-          label: '',
-        ),
+        //BottomNavigationBarItem(
+        //  icon: Icon(
+        //    Icons.login_outlined,
+        //    color: Color.fromARGB(255, 116, 54, 33),
+        //  ),
+        //  label: '',
+        //),
+        //BottomNavigationBarItem(
+        //  icon: Icon(
+        //    Icons.create,
+        //    color: Color.fromARGB(255, 116, 54, 33),
+        //  ),
+        //  label: '',
+        //),
         // BottomNavigationBarItem(
         //   icon: Icon(Icons.home, color: Color.fromARGB(255, 238, 109, 65)),
         //   label: '',
@@ -97,12 +102,7 @@ class BottomNav extends StatelessWidget {
       route = Sound_meter();
     } else if (index == 3) {
       route = app_feedback.Feedback();
-    } else if (index == 4) {
-      route = Login();
-    } else if (index == 5) {
-      route = SignUp();
     }
-    
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => route,
